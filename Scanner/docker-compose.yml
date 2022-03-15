@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+    openvas:
+        build: ./docker/
+        ports:
+            - "8080:9392"
+        volumes:
+            - "${PWD}/docker/nameko/config.yaml:/opt/mits/scanfiles/nameko_config.yaml"
+            - "${PWD}/token.txt:/opt/mits/scanfiles/creds/token.txt"
+            - redis-data:/var/lib/redis
+            - data:/data/
+        environment:
+            - QUIET=true
+            - SKIPSYNC=true
+            - PROJECT_NAME=DICOM_TEST
+
+volumes:
+    redis-data:
+    data:
+        driver: local

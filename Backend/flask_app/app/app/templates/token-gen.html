@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+<a href="{{ url_for('ui_api.get_target_front', id=target.id) }}" class="link-secondary"> <- back</a>
+
+<h4>Target: {{ target.name }}</h4>
+<div class="row">
+    <div class="col-md-4">
+        <!--{{wtf.quick_form(form)}}-->
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            {{ wtf.form_field(form.expiration, class="form-control mb-3") }}
+            {{ wtf.form_field(form.submit, class="btn btn-outline-dark") }}
+            {% if online %}
+                {{ wtf.form_field(form.submit2, class="btn btn-outline-dark") }}
+            {% endif %}
+        </form>
+    </div>
+
+
+</div>
+
+{% if token %}
+    <p>{{token}}</p>
+{% endif %}
+
+
+{% endblock %}

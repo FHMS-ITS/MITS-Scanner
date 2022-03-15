@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block app_content %}
+<a href="{{ url_for('ui_api.get_target_front', id=target.id) }}" class="link-secondary"> <- back</a>
+<h4>Target: {{ target.name }}</h4>
+
+<div class="mb-2">
+    <a href="{{ url_for('ui_api.reports_front', id=target.id) }}">All reports...</a>
+</div>
+
+<h3>OpenVAS Report</h3>
+
+<div class="accordion" id="accordionExample">
+    {% for ip in report["openvas_report"] %}
+    {% set outer_loop = loop %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a{{loop.index}}" aria-expanded="true" aria-controls="collapseOne" style="
+                {% if report["openvas_report"][ip][2]["result"]["original_threat"] == "High" %}
+                    background-color:#e74c3c;
+                {% elif report["openvas_report"][ip][2]["result"]["original_threat"] == "Medium" %}
+                    background-color:#f4d03f;
+                {% elif report["openvas_report"][ip][2]["result"]["original_threat"] == "Low" %}
+                    background-color:#27ae60;
+                {% else %}
+                    background-color:#3498db ;
+                {% endif %}
+">
+                    {{ip}}
+                </button>
+            </h2>
+            <div id="a{{loop.index}}" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {% for finding in report["openvas_report"][ip] %}
+
+                        <div class="accordion" id="accordionFindings">
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#b{{loop.index}}_{{ outer_loop.index }}" aria-expanded="true" aria-controls="collapseTwo">
+                                        {% if loop.index == 1 %}
+                                            Start Time
+                                        {% elif loop.index == 2 %}
+                                            End Time
+                                        {% else %}
+                                            {{ finding["result"]["name"] }}
+                                        {% endif %}
+
+                                    </button>
+                                </h2>
+                                <div id="b{{loop.index}}_{{ outer_loop.index }}" class="accordion-collapse collapse " aria-labelledby="headingTwo" data-bs-parent="#accordionFindings">
+
+                                    {% if loop.index == 1 %}
+                                        {{ finding["start"] }}
+                                    {% elif loop.index == 2 %}
+                                        {{ finding["end"] }}
+                                    {% else %}
+                                        <table class="table">
+                                            <tbody>
+                                        {% for res in finding["result"] %}
+
+                                            <tr>
+                                                <th scope="row">{{ res }}</th>
+                                                <td>{{ finding["result"][res] }}</td>
+                                            </tr>
+
+                                        {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% endif %}
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+<h3>TLS Report</h3>
+
+<div class="accordion" id="tlsReport">
+    {% for element in tls_report %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTLS">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tls{{loop.index}}" aria-expanded="true" aria-controls="collapseOne">
+                    {{(element.items() | first)[0]}}
+                </button>
+            </h2>
+            <div id="tls{{loop.index}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#tlsReport">
+                <div class="accordion-body">
+
+                    <table class="table">
+                        <tbody>
+                        {% for res in element[(element.items() | first)[0]] %}
+
+                        <tr>
+                            <th scope="row">{{ res }}</th>
+                            <td>
+                                {% for item in element[(element.items() | first)[0]][res] %}
+                                {{ item }} <br>
+                                {% endfor %}
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+
+<nav aria-label="...">
+    <ul class="pagination mt-3">
+
+        <li class="page-item {% if not prev_url %} disabled {% endif %}">
+            <a class="page-link" {% if prev_url %} href="{{ prev_url }} {% endif %}">Previous</a>
+        </li>
+
+        <li class="page-item {% if not next_url %} disabled {% endif %}">
+            <a class="page-link" {% if next_url %} href="{{ next_url }} {% endif %}">Next</a>
+        </li>
+    </ul>
+</nav>
+{% endblock %}

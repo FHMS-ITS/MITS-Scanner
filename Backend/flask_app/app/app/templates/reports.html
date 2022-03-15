@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block app_content %}
+
+{% if report_generating %}
+<meta http-equiv="refresh" content="5; URL={{ url_for('ui_api.reports_front', id=target_id) }}">
+{% endif %}
+
+<a href="{{ url_for('ui_api.report_front', id=target_id) }}" class="link-secondary"> <- back</a>
+<h4>User: {{ current_user.username }}</h4>
+
+<ul class="list-group">
+    {% for report, time, status_log, status_low, status_medium, status_high in reports %}
+    <a class="list-group-item-action list-group-item" href="{{ url_for('ui_api.download_report', id=target_id, name=report) }}" >{{ report }}, <span style="color: grey; font-size: x-small;">{{ time.strftime('%d.%m.%Y, %H:%M') }}</span>
+        <object>
+            <form method="POST" action="" style="float: right;margin-left:1rem;margin-bottom: 0;">
+            {{ high_form.csrf_token}}
+
+            {{ wtf.form_field(high_form.report_name_high, value=report) }}
+
+            {% if status_high == "gen" %}
+            {{ wtf.form_field(high_form.submit, class="btn btn-outline-danger disabled") }}
+            {% elif status_high == "avail"%}
+            {{ wtf.form_field(high_form.submit, class="btn btn-danger") }}
+            {% else %}
+            {{ wtf.form_field(high_form.submit, class="btn btn-outline-danger") }}
+            {% endif %}
+        </form></object>
+        <object><form method="POST" action="" style="float: right;margin-left:1rem;margin-bottom: 0;">
+            {{ medium_form.csrf_token}}
+
+            {{ wtf.form_field(medium_form.report_name_medium, value=report) }}
+
+            {% if status_medium == "gen" %}
+            {{ wtf.form_field(medium_form.submit, class="btn btn-outline-warning disabled") }}
+            {% elif status_medium == "avail"%}
+            {{ wtf.form_field(medium_form.submit, class="btn btn-warning") }}
+            {% else %}
+            {{ wtf.form_field(medium_form.submit, class="btn btn-outline-warning") }}
+            {% endif %}
+        </form></object>
+        <object><form method="POST" action="" style="float: right;margin-left:1rem;margin-bottom: 0;">
+            {{ low_form.csrf_token}}
+
+            {{ wtf.form_field(low_form.report_name_low, value=report) }}
+
+            {% if status_low == "gen" %}
+                {{ wtf.form_field(low_form.submit, class="btn btn-outline-success disabled") }}
+            {% elif status_low == "avail"%}
+                {{ wtf.form_field(low_form.submit, class="btn btn-success") }}
+            {% else %}
+                {{ wtf.form_field(low_form.submit, class="btn btn-outline-success") }}
+            {% endif %}
+        </form></object>
+        <object><form method="POST" action="" style="float: right;margin-left:1rem;margin-bottom: 0;">
+            {{ log_form.csrf_token}}
+
+            {{ wtf.form_field(log_form.report_name_log, value=report) }}
+
+            {% if status_log == "gen" %}
+                {{ wtf.form_field(log_form.submit, class="btn btn-outline-info disabled") }}
+            {% elif status_log == "avail"%}
+                {{ wtf.form_field(log_form.submit, class="btn btn-info") }}
+            {% else %}
+                {{ wtf.form_field(log_form.submit, class="btn btn-outline-info") }}
+            {% endif %}
+        </form></object>
+    </a>
+    {% endfor %}
+</ul>
+
+{% endblock %}
+

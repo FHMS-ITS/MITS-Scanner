@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<!--<meta http-equiv="refresh" content="5; URL={{ url_for('ui_api.send_message_front', id=target.id) }}">-->
+<a href="{{ url_for('ui_api.get_target_front', id=target.id) }}" class="link-secondary"> <- back</a>
+<h4>Send Message to {{ target.name }}</h4>
+<div class="row">
+    <!--<div class="col-md-4">
+
+    </div>-->
+
+    {% if online %}
+            <div class="col-md-4">
+                <form method="POST" action="">
+                    {{ form.csrf_token }}
+                    {{ wtf.form_field(form.message, class="form-control mb-3") }}
+                    {{ wtf.form_field(form.submit, class="btn btn-outline-dark") }}
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {{ ip_upload_form.csrf_token }}
+                    {{ wtf.form_field(ip_upload_form.file, class="form-control mb-3") }}
+                    {{ wtf.form_field(ip_upload_form.submit, class="btn btn-outline-dark") }}
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form method="POST" action="" enctype="multipart/form-data">
+                    {{ ip_ex_upload_form.csrf_token }}
+                    {{ wtf.form_field(ip_ex_upload_form.fileex, class="form-control mb-3") }}
+                    {{ wtf.form_field(ip_ex_upload_form.submit, class="btn btn-outline-dark") }}
+                </form>
+            </div>
+
+    <script>
+        function addCommand(command) {
+            document.getElementById("message").value = command;
+        }
+
+    </script>
+
+</div>
+
+
+<div class="row">
+    <div class="col-lg-1"  style="padding-bottom: 10px; padding-top: 10px">
+        <a class="btn btn-outline-dark" href="{{ url_for('ui_api.send_message_front', id=target.id)}}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+                <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+                <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+            </svg>
+        </a>
+    </div>
+    <div class="col"  style="padding-bottom: 10px; padding-top: 10px">
+    <div class="btn-group flex-wrap" role="group" aria-label="Basic example">
+
+            <button class="btn btn-outline-success" onclick="addCommand('start_scan')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z"/>
+                </svg>
+                Start Scan
+            </button>
+            <button class="btn btn-outline-dark"  onclick="addCommand('get_progress')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reception-4" viewBox="0 0 16 16">
+                    <path d="M0 11.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-5zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-8zm4-3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-11z"/>
+                </svg>
+                Scan Progress
+            </button>
+            <button class="btn btn-outline-dark" onclick="addCommand('get_schedule')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-check-fill" viewBox="0 0 16 16">
+                    <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zm-5.146-5.146-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708.708z"/>
+                </svg>
+                Show Schedule
+            </button>
+            <button class="btn btn-outline-dark" onclick="addCommand('schedule_<weekday>_<time>_<offset(weeks)>')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-plus-fill" viewBox="0 0 16 16">
+                    <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM8.5 8.5V10H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V11H6a.5.5 0 0 1 0-1h1.5V8.5a.5.5 0 0 1 1 0z"/>
+                </svg>
+                Set Schedule
+            </button>
+            <button class="btn btn-outline-danger" onclick="addCommand('clean_schedule')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-minus-fill" viewBox="0 0 16 16">
+                    <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM6 10h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1 0-1z"/>
+                </svg>
+                Delete Schedule
+            </button>
+            <button class="btn btn-outline-dark" onclick="addCommand('get_ips')">
+                Show IPs
+            </button>
+            <button class="btn btn-outline-dark" onclick="addCommand('exclude_ips')">
+                Show excluded IPs
+            </button>
+            <button class="btn btn-outline-dark" onclick="addCommand('get_proc')">
+                Show Processes
+            </button>
+            <button class="btn btn-outline-danger" onclick="addCommand('clean_ips')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                </svg>
+                Delete IPs
+            </button>
+            <button class="btn btn-outline-danger" onclick="addCommand('clean_exclude')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+                </svg>
+                Delete Excluded IPs
+            </button>
+            <button class="btn btn-outline-dark" onclick="addCommand('get_token')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+                </svg>
+                Get Token Expiration
+            </button>
+    </div>
+    </div>
+
+</div>
+
+{% else %}
+<h3>Offline</h3>
+{% endif %}
+
+{% if messages %}
+    <ul class="list-group">
+        {% for message in messages %}
+
+            <li class="list-group-item">
+                <span style="color: grey; font-size: x-small;">{{ message.timestamp.strftime('%d.%m.%Y, %H:%M') }}</span>
+                {% if message.created_by_target %}
+                {{ target.name }} :
+                {% else %}
+                Me:
+                {% endif %}
+                {{ message.body }}</li>
+
+        {% endfor %}
+
+    </ul>
+
+
+<nav aria-label="...">
+    <ul class="pagination mt-3">
+
+        <li class="page-item {% if not prev_url %} disabled {% endif %}">
+            <a class="page-link" {% if prev_url %} href="{{ prev_url }} {% endif %}">Previous</a>
+        </li>
+
+        <li class="page-item {% if not next_url %} disabled {% endif %}">
+            <a class="page-link" {% if next_url %} href="{{ next_url }} {% endif %}">Next</a>
+        </li>
+    </ul>
+</nav>
+
+{% endif %}
+
+{% endblock %}

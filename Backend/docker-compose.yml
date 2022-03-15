@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./flask_app
+    expose:
+      - 5000
+    volumes:
+      - reports:/app/reports
+      - app-db:/app/app-db
+    depends_on: 
+      - redisq
+  nginx:
+    build: ./nginx
+    depends_on:
+      - web
+  redisq:
+    image: redis
+volumes:
+  reports:
+  app-db:
